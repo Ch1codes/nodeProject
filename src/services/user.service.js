@@ -1,7 +1,7 @@
 import { prisma } from "../db/db.js";
 import { generateJwtToken } from "../libs/jwt-utils.js";
 import { checkPassword, generateHashforPassword } from "../libs/passwordutility.js";
-
+import { GenderEnum } from "@prisma/client";
 
 export const userLoginService = async(loginData)=> {
     const email=loginData.email;
@@ -31,13 +31,20 @@ export const getUsersService = async () => {
 
   export const registerUserService= async(registerUserData)=>{
     const hashedPassword = await generateHashforPassword(registerUserData.password);
-
+    // let gen=GenderEnum.OTHER;
+    // if (registerUserData.gender=="MALE"){
+    //      gen=GenderEnum.MALE;
+    // }
+    // else if(registerUserData.gender=="FEMALE"){
+    //     gen=GenderEnum.FEMALE;
+    // }
     const res = await prisma.user.create({
         data: {
             fullName:registerUserData.fullName,
             email:registerUserData.email,
             password:hashedPassword,
-            gender:registerUserData.gender
+            // gender:gen,
+            gender: registerUserData.gender,
         },
         omit: {
             password:true,

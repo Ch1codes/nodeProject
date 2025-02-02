@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { userLoginService, getUsersService, registerUserService, getUserProfileService } from "../services/user.service.js";
+import { createUserSchema } from "../schemas/user.schema.js";
 
 
 
@@ -29,6 +30,7 @@ export  const getUsersController= async(req, res, next)=> {
 
 export const registerUserController = async(req, res, next)=> {
     try{
+        createUserSchema.parse(req.body);
         const data = await registerUserService(req.body);
         res.status(StatusCodes.OK).json(data);
 

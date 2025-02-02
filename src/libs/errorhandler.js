@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { StatusCodes } from "http-status-codes";
 import pkg from "jsonwebtoken";
+import { ZodError } from "zod";
 const {JsonWebTokenError}=pkg;
 export const errorHandler = (error, req, res, next) => {
   console.error("Error logged in error handler:--", error?.message);
@@ -27,6 +28,16 @@ export const errorHandler = (error, req, res, next) => {
         });
         return;
     }
+  }
+  if (error instanceof ZodError){
+    const errorMessages=error.errors.map((issue)=>({
+      message:'${issue.path.join(".")} is ${issue.message}',
+    }))
+    res.status(StatusCodes.BAD_REQUEST).json({
+      error: "Invalid data",
+      message: "Invalid data",
+    });
+
   }
   if (error?.cause=="invalidCredentials"){
     res.status(StatusCodes.UNAUTHORIZED).json({
