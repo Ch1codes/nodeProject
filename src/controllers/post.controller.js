@@ -13,8 +13,9 @@ export const getAllPostsController=async (req, res, next)=>{
 }
 export const createPostController = async (req, res, next)=>{
     try {
-        // createPostSchema.parse(req.body);
-        const data = await createPostService(req.body);
+        createPostSchema.parse(req.body);
+        
+        const data = await createPostService(req.body, req.userId);
         res.status(StatusCodes.OK).json(data);
     } catch (error) {
         console.error(error);
