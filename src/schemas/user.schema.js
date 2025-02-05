@@ -7,3 +7,9 @@ export const createUserSchema = z.object({
     gender:GenderEnum,
 })
 .strict();
+
+export const loginUserSchema = z.object({
+    email: z.string(),
+    password:z.string(),
+})
+.strict();

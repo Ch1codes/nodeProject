@@ -31,27 +31,19 @@ export const getUsersService = async () => {
 
   export const registerUserService= async(registerUserData)=>{
     const hashedPassword = await generateHashforPassword(registerUserData.password);
-    // let gen=GenderEnum.OTHER;
-    // if (registerUserData.gender=="MALE"){
-    //      gen=GenderEnum.MALE;
-    // }
-    // else if(registerUserData.gender=="FEMALE"){
-    //     gen=GenderEnum.FEMALE;
-    // }
-    const res = await prisma.user.create({
+    const user = await prisma.user.create({
         data: {
             fullName:registerUserData.fullName,
             email:registerUserData.email,
             password:hashedPassword,
-            // gender:gen,
             gender: registerUserData.gender,
         },
         omit: {
             password:true,
         }
     },);
-    const token=generateJwtToken(res.id);
-    return {res, token};
+    const token=generateJwtToken(user.id);
+    return {user, token};
   }
   
 export const getUserProfileService = async (userId) => {

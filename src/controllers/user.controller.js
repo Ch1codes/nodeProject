@@ -1,10 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import { userLoginService, getUsersService, registerUserService, getUserProfileService } from "../services/user.service.js";
-import { createUserSchema } from "../schemas/user.schema.js";
+import { createUserSchema, loginUserSchema } from "../schemas/user.schema.js";
 
 
 
 export const userLoginController=async(req, res, next   )=> {
+    loginUserSchema.parse(req.body)
     try{
         const data = await userLoginService(req.body);
         res.status(StatusCodes.ACCEPTED).json(data);
