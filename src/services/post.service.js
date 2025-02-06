@@ -21,3 +21,11 @@ export const getPostByIdService = async(postId)=>{
     }
     return post;
 }
+
+export const getPostByUserIdService = async(userId)=>{
+    const post = await prisma.post.findMany({where:{userId:userId}});
+    if (!post){
+        throw new Error("Not Found", {cause: "NotFoundByUserCustom"});
+    }
+    return post;
+}

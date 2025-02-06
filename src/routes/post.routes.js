@@ -1,6 +1,6 @@
 import {Router} from "express";
 import { authMiddleWare } from "../middleware/authMiddleware.js";
-import { createPostController, getAllPostsController, getPostByIdController } from "../controllers/post.controller.js";
+import { createPostController, getAllPostsController, getPostByIdController, getPostByUserIdController } from "../controllers/post.controller.js";
 
 
 
@@ -14,6 +14,9 @@ postRouter.get('/',getAllPostsController)
 postRouter
     .route("/:postId")
     .get(authMiddleWare, getPostByIdController)
+postRouter
+    .route("/user/:userId")
+    .get(authMiddleWare, getPostByUserIdController)
 //     .patch(updatePostController)
 //     .delete(deletePostController);
 

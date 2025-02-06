@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { createPostService, getAllPostsService, getPostByIdService } from "../services/post.service.js";
+import { createPostService, getAllPostsService, getPostByIdService, getPostByUserIdService } from "../services/post.service.js";
 import { createPostSchema } from "../schemas/post.schema.js";
 export const getAllPostsController=async (req, res, next)=>{
     try {
@@ -28,6 +28,19 @@ export const getPostByIdController=async (req, res, next)=>{
         
         console.log(postId,"hello hello");
         const post = await getPostByIdService(postId);
+        res.status(StatusCodes.OK).json(post);
+    }
+    catch(error){
+        console.error(error);
+        next(error);
+    }
+}
+export const getPostByUserIdController=async (req, res, next)=>{
+    try {
+        const userId=req.params.userId;
+        
+        // console.log(postId,"hello hello hello");
+        const post = await getPostByUserIdService(userId);
         res.status(StatusCodes.OK).json(post);
     }
     catch(error){

@@ -69,6 +69,12 @@ export const errorHandler = (error, req, res, next) => {
       message:"post not found",
     })
   }
+  if (error?.cause=="NotFoundByUserCustom"){
+    res.status(StatusCodes.NOT_FOUND).json({
+      error:"not found by user error",
+      message:"post not found of user",
+    })
+  }
   
 
   // Catch-all for unexpected errors
