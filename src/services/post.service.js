@@ -13,3 +13,11 @@ export const createPostService = async(postData, userId)=>{
     },);
     return posts;
 }
+
+export const getPostByIdService = async(postId)=>{
+    const post = await prisma.post.findUnique({where:{id:postId}});
+    if (!post){
+        throw new Error("Not Found", {cause: "NotFoundCustom"});
+    }
+    return post;
+}

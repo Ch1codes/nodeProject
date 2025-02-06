@@ -31,13 +31,13 @@ export const errorHandler = (error, req, res, next) => {
   }
   if (error instanceof ZodError){
     const errorMessages=error.errors.map((issue)=>({
-      message:'${issue.path.join(".")} is ${issue.message}',
+      message:`${issue.path.join(".")} is ${issue.message}`,
     }))
     res.status(StatusCodes.BAD_REQUEST).json({
       error: "Invalid data",
-      message: "Invalid data",
+      message: errorMessages,
     });
-
+    return;
   }
   if (error?.cause=="invalidCredentials"){
     res.status(StatusCodes.UNAUTHORIZED).json({
@@ -61,6 +61,12 @@ export const errorHandler = (error, req, res, next) => {
     res.status(StatusCodes.UNAUTHORIZED).json({
       error:"Unauthorized error",
       message:"Invalid Token"
+    })
+  }
+  if (error?.cause=="NotFoundCustom"){
+    res.status(StatusCodes.NOT_FOUND).json({
+      error:"not found error",
+      message:"post not found",
     })
   }
   

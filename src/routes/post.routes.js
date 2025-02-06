@@ -1,6 +1,6 @@
 import {Router} from "express";
 import { authMiddleWare } from "../middleware/authMiddleware.js";
-import { createPostController, getAllPostsController } from "../controllers/post.controller.js";
+import { createPostController, getAllPostsController, getPostByIdController } from "../controllers/post.controller.js";
 
 
 
@@ -10,10 +10,10 @@ postRouter
     .get(authMiddleWare, getAllPostsController)
     .post(authMiddleWare, createPostController);
 
-// postRouter.get('/',getAllPostsController)
-// postRouter
-//     .route("/postid")
-//     .get(getPostByIdController)
+postRouter.get('/',getAllPostsController)
+postRouter
+    .route("/:postId")
+    .get(authMiddleWare, getPostByIdController)
 //     .patch(updatePostController)
 //     .delete(deletePostController);
 
