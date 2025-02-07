@@ -29,3 +29,17 @@ export const getPostByUserIdService = async(userId)=>{
     }
     return post;
 }
+
+export const deletePostByIdService = async(postId, loggedInUserId)=>{
+    const post = await prisma.post.findUnique({where:{id:postId}});
+    if (!post){
+        throw new Error("Not Found", {cause: "NotFoundCustom"});
+    }
+    if(post.userId==loggedInUserId){
+        const deletedPost = await prisma.post.delete({where:{id:postId}});
+        return deletedPost;
+    }else{
+        throw new Error("Unauthorized for the user", {cause: "UnauthorizedCustom"})
+    }
+    
+}

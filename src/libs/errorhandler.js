@@ -75,6 +75,12 @@ export const errorHandler = (error, req, res, next) => {
       message:"post not found of user",
     })
   }
+  if (error?.cause=="UnauthorizedCustom"){
+    res.status(StatusCodes.NOT_FOUND).json({
+      error:"user unauthorized error",
+      message:"user not allowed to do this",
+    })
+  }
   
 
   // Catch-all for unexpected errors
