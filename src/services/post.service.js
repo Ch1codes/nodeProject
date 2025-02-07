@@ -43,3 +43,29 @@ export const deletePostByIdService = async(postId, loggedInUserId)=>{
     }
     
 }
+
+export const updatePostByIdService = async(postId,updatedContent, loggedInUserId)=>{
+    const post = await prisma.post.findUnique({where:{id:postId}});
+    if (!post){
+        throw new Error("Not Found", {cause: "NotFoundCustom"});
+    }
+    if(post.userId==loggedInUserId){
+        if(updatedContent.likecase=="like"){
+            post.likesCount=post.likesCount+1;
+        }
+        else if (updatedContent.likecase=="unlike" && post.likesCount>0) {
+            post.likesCount=post.likesCount-1;
+        }
+        const updatedPost = await prisma.post.update({
+            where:{id:postId},
+            data: {
+                content:updatedContent.content,
+                likesCount:post.likesCount
+            }
+        },);
+        return updatedPost;
+        
+    }else{
+        throw new Error("Unauthorized for the user", {cause: "UnauthorizedCustom"})
+    }
+}
