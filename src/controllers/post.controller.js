@@ -38,8 +38,6 @@ export const getPostByIdController=async (req, res, next)=>{
 export const getPostByUserIdController=async (req, res, next)=>{
     try {
         const userId=req.params.userId;
-        
-        // console.log(postId,"hello hello hello");
         const post = await getPostByUserIdService(userId);
         res.status(StatusCodes.OK).json(post);
     }
@@ -63,6 +61,7 @@ export const deletePostByIdController=async(req, res, next)=>{
 
 export const updatePostByIdController = async (req, res, next)=>{
     try {
+        updatePostSchema.parse(req.body);
         const postId=req.params.postId;
         const data = await updatePostByIdService(postId, req.body, req.userId);
         res.status(StatusCodes.OK).json(data);
