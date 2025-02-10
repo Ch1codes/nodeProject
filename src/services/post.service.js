@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import {prisma} from "../db/db.js"
 export const getAllPostsService = async()=>{
-    const posts = await prisma.post.findMany();
+    const posts = await prisma.post.findMany({include:{User:{omit:{password:true}}}});
     return posts;
 }
 export const createPostService = async(postData, userId)=>{
@@ -49,13 +49,11 @@ export const updatePostByIdService = async(postId,updatedContent, loggedInUserId
     if (!post){
         throw new Error("Not Found", {cause: "NotFoundCustom"});
     }
+    if(updatedContent.like){
+        post.likesCount=post.likesCount+1;
+    }
+    
     if(post.userId==loggedInUserId){
-        if(updatedContent.likecase=="like"){
-            post.likesCount=post.likesCount+1;
-        }
-        else if (updatedContent.likecase=="unlike" && post.likesCount>0) {
-            post.likesCount=post.likesCount-1;
-        }
         const updatedPost = await prisma.post.update({
             where:{id:postId},
             data: {
