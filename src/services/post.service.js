@@ -7,7 +7,14 @@ export const getAllPostsService = async(query)=>{
     }
     const posts = await prisma.post.findMany({
         where: {
-            content:{contains:searchTerm, mode:"insensitive"}
+            OR:[
+                {
+                    content:{contains:searchTerm, mode:"insensitive"}
+                },
+                {
+                    User:{fullName:{contains:searchTerm, mode:"insensitive"}}
+                }
+            ]
         },
         include:{User:{omit:{password:true}}}, 
         orderBy:{createdAt:"desc"}
@@ -60,7 +67,14 @@ export const updatePostByIdService = async(postId,updatedContent, loggedInUserId
         throw new Error("Not Found", {cause: "NotFoundCustom"});
     }
     if(updatedContent.like){
-        post.likesCount=post.likesCount+1;
+        // post.likesCount=post.likesCount+1;
+        const updatedPost =await prisma.post.update({
+            where:{id:postId},
+            data:{
+                likesCount:post.likesCount+1
+            }
+        })
+        return updatedPost;
     }
     
     if(post.userId==loggedInUserId){
@@ -71,8 +85,8 @@ export const updatePostByIdService = async(postId,updatedContent, loggedInUserId
                 likesCount:post.likesCount
             }
         },);
-        return updatedPost;
         
+        return updatedPost;
     }else{
         throw new Error("Unauthorized for the user", {cause: "UnauthorizedCustom"})
     }
