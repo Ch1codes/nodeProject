@@ -1,7 +1,17 @@
 import { StatusCodes } from "http-status-codes";
 import {prisma} from "../db/db.js"
-export const getAllPostsService = async()=>{
-    const posts = await prisma.post.findMany({include:{User:{omit:{password:true}}}});
+export const getAllPostsService = async(query)=>{
+    let searchTerm =""
+    if (query.search){
+        searchTerm=query.search;
+    }
+    const posts = await prisma.post.findMany({
+        where: {
+            content:{contains:searchTerm, mode:"insensitive"}
+        },
+        include:{User:{omit:{password:true}}}, 
+        orderBy:{createdAt:"desc"}
+    });
     return posts;
 }
 export const createPostService = async(postData, userId)=>{

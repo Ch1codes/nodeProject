@@ -3,7 +3,7 @@ import { createPostService, deletePostByIdService, getAllPostsService, getPostBy
 import { createPostSchema, updatePostSchema } from "../schemas/post.schema.js";
 export const getAllPostsController=async (req, res, next)=>{
     try {
-        const posts = await getAllPostsService();
+        const posts = await getAllPostsService(req.query);
         res.status(StatusCodes.OK).json(posts);
     }
     catch(error){
