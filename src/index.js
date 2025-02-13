@@ -6,12 +6,18 @@ import bodyParser from "body-parser";
 import { errorHandler } from "./libs/errorhandler.js";
 import cors from "cors"
 import postRouter from "./routes/post.routes.js";
+import { createServer } from "http"
+import { socketHandler } from "./socket/socket.js";
+
 
 const app=express();
 const PORT= process.env.PORT;
+const httpServer = createServer(app);
+
 
 app.use(cors());
 app.use(bodyParser.json())
+socketHandler(httpServer)
 app.get('/', (req, res)=>{
     res.status(statusCodes.OK).json({message:"Welcome to my app"})
 });
@@ -21,9 +27,10 @@ app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 
 
+
 app.use(errorHandler);
 
-app.listen(PORT, ()=>{
+httpServer.listen(PORT, ()=>{
     console.log(`Server running at ${PORT}`)
      
 });
